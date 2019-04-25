@@ -1,0 +1,12 @@
+# kudos.txt - Express gratitude to your contributors.
+# https://github.com/kudos-txt
+
+project:
+  - name: Ansible Meetup Dresden
+    site: https://www.meetup.com/Ansible-Meetup-Dresden/
+
+contributors:
+  - name: daniel-wtd
+    mail: daniel@while-true-do.io
+    role: Co-Organisator
+    site: https://while-true-do.io
