@@ -53,13 +53,15 @@ here.
 
 Is hosting the meeting and sponsoring a location, drinks and WiFi.
 
-<https://itelligencegroup.com/de/>
+-   site: <https://itelligencegroup.com/de/>
+-   twitter: @itelligence_de
 
 ### profi.com AG - business solutions
 
 Is sponsoring a location, drinks and WiFi.
 
-<https://www.proficom.de/>
+-   site: <https://www.proficom.de/>
+-   twitter: @proficom
 
 ## Contributing
 

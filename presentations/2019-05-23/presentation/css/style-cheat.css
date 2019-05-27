@@ -1,0 +1,196 @@
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Helvetice Neue", sans-serif;
+  color: #222222;
+}
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  border-style: solid;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: normal;
+  height: 2rem;
+  letter-spacing: .1rem;
+  line-height: 2rem;
+  margin: .2rem 0;
+  padding: 0 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.button.button-lg,
+button.button-lg,
+input[type="submit"].button-lg,
+input[type="reset"].button-lg,
+input[type="button"].button-lg {
+  height: 3rem;
+  line-height: 3rem;
+  padding: 0 2rem;
+}
+code {
+  background-color: #dddddd;
+  padding: 0 .3rem;
+  border-radius: .2rem;
+}
+kbd {
+  background-color: #222222;
+  color: #fefefe;
+  padding: .1rem .3rem;
+  border-radius: .2rem;
+}
+pre {
+  border-left-style: solid;
+  border-left-color: #222222;
+  background-color: #dddddd;
+  border-left-width: .3rem;
+  margin: 0;
+  padding-left: 1rem;
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+}
+pre code {
+  background-color: inherit;
+}
+.container {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 75rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  width: 100%;
+}
+.container-fluid {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 75rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+hr {
+  color: #dddddd;
+}
+.row {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 100%;
+}
+.row .col {
+  display: block;
+  flex: 1;
+  margin: 0.5rem 0;
+}
+ul,
+ol,
+dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+ul > ul,
+ol > ul,
+dl > ul,
+ul ol,
+ol ol,
+dl ol,
+ul dl,
+ol dl,
+dl dl {
+  margin-bottom: 0;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 1rem;
+}
+blockquote {
+  border-left-style: solid;
+  border-left-color: #dddddd;
+  border-left-width: .3rem;
+  margin: 0;
+  padding-left: 1rem;
+  padding-top: .2rem;
+  padding-bottom: .2rem;
+}
+blockquote footer::before {
+  content: "- ";
+}
+.table {
+  background-color: transparent;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  max-width: 100%;
+  width: 100%;
+}
+.table thead th {
+  border-bottom-color: #dddddd;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-top-width: 1px;
+}
+.table th,
+.table td {
+  border-top-color: #dddddd;
+  border-top-style: solid;
+  border-top-width: 1px;
+  padding: .75rem;
+  text-align: inherit;
+}
+.table-striped tr:nth-child(even) {
+  background-color: #dddddd;
+}
+p {
+  margin: .5rem 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+  margin: .5rem 0;
+}
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.75rem;
+}
+h3 {
+  font-size: 1.625rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.375rem;
+}
+h6 {
+  font-size: 1.25rem;
+}
+strong,
+b {
+  font-weight: bold;
+  margin: .5rem 0;
+}
+em,
+i {
+  margin: .5rem 0;
+}
+small {
+  font-size: .75rem;
+  margin: .5rem 0;
+}
+sub,
+sup {
+  font-size: .75rem;
+}

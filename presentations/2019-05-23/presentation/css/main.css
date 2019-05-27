@@ -1,0 +1,16 @@
+.title{
+  background-color: #000000;
+  color: #ffffff
+}
+
+.remark-slide-content{
+  font-size: 25px;
+}
+
+a{
+  color: red;
+}
+
+h2{
+  margin-bottom: 2rem;
+}
