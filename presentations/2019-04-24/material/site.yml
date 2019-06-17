@@ -1,0 +1,191 @@
+---
+# ansible-role_prov_aws
+- name: Provison AWS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+  vars:
+    ec2_access_key: "<access_key>"
+    ec2_secret_key: "<secret_key>"
+
+    ec2_key_name: key_ansible
+    ec2_region: "eu-central-1"
+    ec2_vpc_name: "vpc_ansible"
+    ec2_vpc_cidr_block: "10.10.0.0/16"
+    ec2_igw_name: "igw_ansible"
+    ec2_sub_web_name: "sub_ansible_web"
+    ec2_sub_web_cidr: "10.10.1.0/24"
+    ec2_rt_name: "rt_ansible"
+    ec2_sg_web_name: "sg_ansible_web"
+    ec2_sg_web_desc: "Security Group for Webservers"
+    ec2_instance_name: "in_ansible_web_01"
+    ec2_instance_image: "ami-03337e8290f6f0928"
+    ec2_instance_count: "14"
+
+  tasks:
+    - name: Create a keypair
+      ec2_key:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        name: "{{ ec2_key_name }}"
+        region: "{{ ec2_region }}"
+      register: "key_info"
+
+    - debug:
+        msg: "{{ key_info }}"
+
+    - name: Create VPC Net
+      ec2_vpc_net:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        name: "{{ ec2_vpc_name }}"
+        cidr_block: "{{ ec2_vpc_cidr_block }}"
+        region: "{{ ec2_region }}"
+        tags:
+          Name: "{{ ec2_vpc_name }}"
+      register: "vpc_info"
+
+    - debug:
+        msg: "{{ vpc_info }}"
+
+    - name: Create IGW
+      ec2_vpc_igw:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        vpc_id: "{{ vpc_info.vpc.id }}"
+        state: present
+        region: "{{ ec2_region }}"
+        tags:
+          Name: "{{ ec2_igw_name }}"
+      register: igw_info
+
+    - debug:
+        msg: "{{ igw_info }}"
+
+    - name: Create VPC Subnet
+      ec2_vpc_subnet:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        region: "{{ ec2_region }}"
+        vpc_id: "{{ vpc_info.vpc.id }}"
+        cidr: "{{ ec2_sub_web_cidr }}"
+        tags:
+          Name: "{{ ec2_sub_web_name }}"
+      register: "sub_info"
+
+    - debug:
+        msg: "{{ sub_info }}"
+
+    - name: Create Route Table
+      ec2_vpc_route_table:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        vpc_id: "{{ vpc_info.vpc.id }}"
+        region: "{{ ec2_region }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ igw_info.gateway_id }}"
+        subnets:
+          - "{{ sub_info.subnet.id }}"
+        tags:
+          Name: "{{ ec2_rt_name }}"
+      register: "rt_info"
+
+    - debug:
+        msg: "{{ rt_info }}"
+
+    - name: Create Security Group
+      ec2_group:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        name: "{{ ec2_sg_web_name }}"
+        description: "{{ ec2_sg_web_desc }}"
+        vpc_id: "{{ vpc_info.vpc.id }}"
+        region: "{{ ec2_region }}"
+        rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: icmp
+          from_port: -1
+          to_port:  -1
+          cidr_ip: 0.0.0.0/0
+      register: "sg_info"
+
+    - debug:
+        msg: "{{ sg_info }}"
+
+    - name: Create instance (ec2_instance)
+      ec2_instance:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        name: "{{ ec2_instance_name }}"
+        key_name: "{{ ec2_key_name }}"
+        region: "{{ ec2_region }}"
+        vpc_subnet_id: "{{ sub_info.subnet.id }}"
+        instance_type: t2.micro
+        security_group: "{{ ec2_sg_web_name }}"
+        network:
+          assign_public_ip: true
+        image_id: "{{ ec2_instance_image }}"
+        wait: true
+        tags:
+          Usage: webserver
+      register: "instance_info"
+
+    - debug:
+        msg: "{{ instance_info }}"
+
+    - name: Add instance(s) to Ansible Group
+      add_host:
+        hostname: "{{ item.public_dns_name }}"
+        groupname: launched
+      with_items: "{{ instance_info.instances }}"
+
+    - name: Create instance (ec2)
+      ec2:
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        key_name: "{{ ec2_key_name }}"
+        region: "{{ ec2_region }}"
+        instance_type: t2.xlarge
+        image: "{{ ec2_instance_image }}"
+        group: "{{ ec2_sg_web_name }}"
+        vpc_subnet_id: "{{ sub_info.subnet.id }}"
+        assign_public_ip: true
+        exact_count: "{{ ec2_instance_count }}"
+        instance_tags:
+          Usage: ansible101
+        count_tag:
+          Usage: ansible101
+        wait: true
+      register: ec2
+
+    - name: Add instance(s) to Ansible Group
+      add_host:
+        hostname: "{{ item.public_dns_name }}"
+        groupname: launched
+      with_items: "{{ ec2.instances }}"
+
+- name: Wait for instance(s)
+  hosts: launched
+  gather_facts: false
+  tasks:
+    - name: Wait for Connection
+      wait_for_connection:
+        delay: 20
+        timeout: 320

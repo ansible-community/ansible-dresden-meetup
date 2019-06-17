@@ -1,0 +1,52 @@
+# name: .gitignore
+# description: This file facilitates gitignore.
+# author: while-true-do.io
+# contact: hello@while-true-do.io
+# license: BSD-3-Clause
+# reference: https://git-scm.com/docs/gitignore
+
+# repo specific
+
+# compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# ansible retry files
+*.retry
+
+# cache
+**/__pycache__
+
+# temporary files
+*.swp
+*.swo
+*~
+
+# packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# lock files
+*.lock
+package-lock.json
