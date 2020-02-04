@@ -1,0 +1,41 @@
+---
+- hosts: "all"
+ 
+  vars:
+    gitea_image: "docker.io/gitea/gitea:latest"
+
+  handlers:
+
+    - name: "Restart gitea Service"
+      systemd:
+        name: "gitea.service"
+        state: "restarted"
+        daemon_reload: true
+      become: true
+ 
+  tasks:
+
+    - name: "Pull gitea Image"
+      podman_image:
+        name: "{{ gitea_image }}"
+        state: "present"
+      become: true
+
+    - name: "Manage gitea Service File"
+      template:
+        src: "gitea.service.j2"
+        dest: "/etc/systemd/system/gitea.service"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+      notify:
+        - "Restart gitea Service"
+
+    - name: "Manage gitea Service"
+      systemd:
+        name: "gitea.service"
+        state: "started"
+        enabled: true
+        daemon_reload: true
+      become: true
